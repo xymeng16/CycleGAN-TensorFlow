@@ -16,7 +16,8 @@ FLAGS = tf.flags.FLAGS
 tf.flags.DEFINE_string('model', '', 'model path (.pb)')
 tf.flags.DEFINE_string('input', 'input_sample.jpg', 'input image path (.jpg)')
 tf.flags.DEFINE_string('output', 'output_sample.jpg', 'output image path (.jpg)')
-tf.flags.DEFINE_integer('image_size', '256', 'image size, default: 256')
+tf.flags.DEFINE_integer('image_width', 256, 'image width, default: 256')
+tf.flags.DEFINE_integer('image_height', 256, 'image height, default: 256')
 
 def inference():
   graph = tf.Graph()
@@ -25,9 +26,9 @@ def inference():
     with tf.gfile.FastGFile(FLAGS.input, 'rb') as f:
       image_data = f.read()
       input_image = tf.image.decode_jpeg(image_data, channels=3)
-      input_image = tf.image.resize_images(input_image, size=(FLAGS.image_size, FLAGS.image_size))
+      input_image = tf.image.resize_images(input_image, size=(FLAGS.image_width, FLAGS.image_height))
       input_image = utils.convert2float(input_image)
-      input_image.set_shape([FLAGS.image_size, FLAGS.image_size, 3])
+      input_image.set_shape([FLAGS.image_width, FLAGS.image_height, 3])
 
     with tf.gfile.FastGFile(FLAGS.model, 'rb') as model_file:
       graph_def = tf.GraphDef()
